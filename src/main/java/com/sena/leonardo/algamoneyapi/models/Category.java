@@ -1,14 +1,14 @@
-package com.sena.leonardo.algamoneyapi.model;
+package com.sena.leonardo.algamoneyapi.models;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "categoria")
-public class Categoria {
+@Table(name = "category")
+public class Category {
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private Long id;
-    private String nome;
+    private String name;
 
     public Long getId() {
         return id;
@@ -18,11 +18,11 @@ public class Categoria {
         this.id = id;
     }
 
-    public String getNome() {
-        return nome;
+    public String getName() {
+        return name;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setName(String name) {
+        this.name = name;
     }
 }
