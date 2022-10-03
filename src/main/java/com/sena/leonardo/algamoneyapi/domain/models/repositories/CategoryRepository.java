@@ -1,6 +1,6 @@
-package com.sena.leonardo.algamoneyapi.repositories;
+package com.sena.leonardo.algamoneyapi.domain.models.repositories;
 
-import com.sena.leonardo.algamoneyapi.models.Category;
+import com.sena.leonardo.algamoneyapi.domain.models.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {

@@ -1,8 +1,7 @@
-package com.sena.leonardo.algamoneyapi.services;
+package com.sena.leonardo.algamoneyapi.domain.models.services;
 
-import com.sena.leonardo.algamoneyapi.models.Category;
-import com.sena.leonardo.algamoneyapi.repositories.CategoryRepository;
-import com.sena.leonardo.algamoneyapi.services.exceptions.ResourceNotFoundException;
+import com.sena.leonardo.algamoneyapi.domain.models.Category;
+import com.sena.leonardo.algamoneyapi.domain.models.repositories.CategoryRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,14 +18,13 @@ public class CategoryService {
     }
 
     @Transactional(readOnly = true)
-    public List<Category> findAllCategories() {
-        return categoriaRepository.findAll();
+    public Optional<Category> findCategoryById(Long id) {
+        return categoriaRepository.findById(id);
     }
 
     @Transactional(readOnly = true)
-    public Category findCategoryById(Long id) {
-        Optional<Category> obj = categoriaRepository.findById(id);
-        return obj.orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
+    public List<Category> findAllCategories() {
+        return categoriaRepository.findAll();
     }
 
     @Transactional

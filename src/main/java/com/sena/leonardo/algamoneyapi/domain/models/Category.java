@@ -1,4 +1,4 @@
-package com.sena.leonardo.algamoneyapi.models;
+package com.sena.leonardo.algamoneyapi.domain.models;
 
 import javax.persistence.*;
 
