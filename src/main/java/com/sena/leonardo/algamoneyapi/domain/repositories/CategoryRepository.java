@@ -1,4 +1,4 @@
-package com.sena.leonardo.algamoneyapi.domain.models.repositories;
+package com.sena.leonardo.algamoneyapi.domain.repositories;
 
 import com.sena.leonardo.algamoneyapi.domain.models.Category;
 import org.springframework.data.jpa.repository.JpaRepository;

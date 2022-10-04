@@ -6,15 +6,22 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 @ControllerAdvice
-public class AlgamoneyExceptionHandler extends ResponseEntityExceptionHandler {
+public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     private MessageSource messageSource;
 
-    public AlgamoneyExceptionHandler(MessageSource messageSource) {
+    public ApiExceptionHandler(MessageSource messageSource) {
         this.messageSource = messageSource;
     }
 
@@ -23,6 +30,24 @@ public class AlgamoneyExceptionHandler extends ResponseEntityExceptionHandler {
         String userMsg = messageSource.getMessage("InvalidMessage", null, LocaleContextHolder.getLocale());
         String devMsg = ex.getCause().toString();
         return handleExceptionInternal(ex, new Error(userMsg, devMsg), headers, HttpStatus.BAD_REQUEST, request);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        List<Issue.Description> descriptions = new ArrayList<>();
+
+        for (ObjectError error : ex.getBindingResult().getAllErrors()) {
+            String field = ((FieldError) error).getField();
+            String msg = messageSource.getMessage(error, LocaleContextHolder.getLocale());
+            descriptions.add(new Issue.Description(field, msg));
+        }
+
+        Issue issue = new Issue();
+        issue.setStatus(status.value());
+        issue.setDateHour(OffsetDateTime.now());
+        issue.setTitle("There is a least one invalid data. Please correct the current failure and try again.");
+        issue.setDescriptions(descriptions);
+        return handleExceptionInternal(ex, issue, headers, status, request);
     }
 
     public static class Error {

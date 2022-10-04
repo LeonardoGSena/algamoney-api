@@ -1,7 +1,7 @@
-package com.sena.leonardo.algamoneyapi.domain.models.services;
+package com.sena.leonardo.algamoneyapi.domain.services;
 
 import com.sena.leonardo.algamoneyapi.domain.models.Category;
-import com.sena.leonardo.algamoneyapi.domain.models.repositories.CategoryRepository;
+import com.sena.leonardo.algamoneyapi.domain.repositories.CategoryRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

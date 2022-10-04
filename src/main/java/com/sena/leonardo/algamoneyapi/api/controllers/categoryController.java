@@ -1,11 +1,12 @@
 package com.sena.leonardo.algamoneyapi.api.controllers;
 
 import com.sena.leonardo.algamoneyapi.domain.models.Category;
-import com.sena.leonardo.algamoneyapi.domain.models.services.CategoryService;
+import com.sena.leonardo.algamoneyapi.domain.services.CategoryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -33,7 +34,7 @@ public class categoryController {
     }
 
     @PostMapping
-    public ResponseEntity<Category> insertCategory(@RequestBody Category category) {
+    public ResponseEntity<Category> insertCategory(@Valid @RequestBody Category category) {
         Category savedCategory = categoriaService.insertNewCategory(category);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(category.getId()).toUri();
