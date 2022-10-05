@@ -13,22 +13,22 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/categories")
-public class categoryController {
+public class CategoryController {
 
     private CategoryService categoriaService;
 
-    public categoryController(CategoryService categoriaService) {
+    public CategoryController(CategoryService categoriaService) {
         this.categoriaService = categoriaService;
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<Category> findCategoryById(@PathVariable Long id) {
-        Optional<Category> categoryById = categoriaService.findCategoryById(id);
-        return categoryById.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+        return categoriaService.findCategoryById(id)
+                .map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping
-    public ResponseEntity<List<Category>> findAllCategory() {
+    public ResponseEntity<List<Category>> findAllCategories() {
         List<Category> categories = categoriaService.findAllCategories();
         return ResponseEntity.ok().body(categories);
     }
