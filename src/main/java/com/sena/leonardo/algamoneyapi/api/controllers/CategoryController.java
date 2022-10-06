@@ -39,11 +39,7 @@ public class CategoryController {
     @PostMapping
     public ResponseEntity<Category> insertCategory(@Valid @RequestBody Category category, HttpServletResponse response) {
         Category newCategory = categoryService.insertNewCategory(category);
-//        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-//                .buildAndExpand(category.getId()).toUri();
         publisher.publishEvent(new ResourceEvent(this, response, newCategory.getId()));
-
         return ResponseEntity.status(HttpStatus.CREATED).body(newCategory);
-
     }
 }
