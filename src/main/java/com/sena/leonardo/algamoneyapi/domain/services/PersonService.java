@@ -1,11 +1,9 @@
 package com.sena.leonardo.algamoneyapi.domain.services;
 
-import com.sena.leonardo.algamoneyapi.domain.exceptions.EntityNotFoundException;
 import com.sena.leonardo.algamoneyapi.domain.models.Person;
 import com.sena.leonardo.algamoneyapi.domain.repositories.PersonRepository;
-import com.sena.leonardo.algamoneyapi.domain.services.exceptions.DatabaseException;
 import com.sena.leonardo.algamoneyapi.domain.services.exceptions.ResourceNotFoundException;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.beans.BeanUtils;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +32,11 @@ public class PersonService {
     @Transactional
     public Person insertNewPerson(Person person) {
         return personRepository.save(person);
+    }
+
+    @Transactional
+    public Optional<Person> updatePerson(Long id) {
+        return personRepository.findById(id);
     }
 
     @Transactional

@@ -51,6 +51,16 @@ public class Person {
         this.status = status;
     }
 
+    public Person() {
+    }
+
+    public Person(Long id, String name, Address address, Boolean status) {
+        this.id = id;
+        this.name = name;
+        this.address = address;
+        this.status = status;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/people")
@@ -42,6 +43,21 @@ public class PersonController {
         publisher.publishEvent(new ResourceEvent(this, response, newPerson.getId()));
 
         return ResponseEntity.status(HttpStatus.CREATED).body(newPerson);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Person> updatePerson(@PathVariable Long id, @Valid @RequestBody Person person) {
+        Optional<Person> personOptional = personService.updatePerson(id);
+        if (!personOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        var personModel = personOptional.get();
+        personModel.setName(person.getName());
+        personModel.setAddress(person.getAddress());
+        personModel.setStatus(person.getStatus());
+
+        return ResponseEntity.status(HttpStatus.OK).body(personService.insertNewPerson(personModel));
     }
 
     @DeleteMapping(value = "/{id}")

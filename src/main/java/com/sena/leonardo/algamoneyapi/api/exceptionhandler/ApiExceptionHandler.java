@@ -1,5 +1,6 @@
 package com.sena.leonardo.algamoneyapi.api.exceptionhandler;
 
+import com.sena.leonardo.algamoneyapi.domain.exceptions.EntityNotFoundException;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -53,11 +54,12 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, issue, headers, status, request);
     }
 
-    @ExceptionHandler({EmptyResultDataAccessException.class})
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public void handleEmptyResultDataAccessException() {
-
+    @ExceptionHandler({ EmptyResultDataAccessException.class })
+    public ResponseEntity<Void> handleEmptyResultDataAccessException(){
+        return ResponseEntity.notFound().build();
     }
+
+
 
     public static class Error {
         private String userMsg;
