@@ -2,9 +2,6 @@ package com.sena.leonardo.algamoneyapi.domain.services;
 
 import com.sena.leonardo.algamoneyapi.domain.models.Person;
 import com.sena.leonardo.algamoneyapi.domain.repositories.PersonRepository;
-import com.sena.leonardo.algamoneyapi.domain.services.exceptions.ResourceNotFoundException;
-import org.springframework.beans.BeanUtils;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,7 +37,13 @@ public class PersonService {
     }
 
     @Transactional
+    public Optional<Person> updateActiveProperties(Long id) {
+        return personRepository.findById(id);
+    }
+
+    @Transactional
     public void deletePerson(Long id) {
         personRepository.deleteById(id);
     }
+
 }

@@ -1,8 +1,10 @@
 package com.sena.leonardo.algamoneyapi.api.exceptionhandler;
 
 import com.sena.leonardo.algamoneyapi.domain.exceptions.EntityNotFoundException;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -59,6 +61,12 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.notFound().build();
     }
 
+    @ExceptionHandler({DataIntegrityViolationException.class})
+    public ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException ex, WebRequest request) {
+        String userMsg = messageSource.getMessage("OperationDenied", null, LocaleContextHolder.getLocale());
+        String devMsg = ExceptionUtils.getRootCauseMessage(ex);
+        return handleExceptionInternal(ex, new Error(userMsg, devMsg), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
 
 
     public static class Error {

@@ -41,7 +41,6 @@ public class PersonController {
     public ResponseEntity<Person> insertPerson(@Valid @RequestBody Person person, HttpServletResponse response) {
         Person newPerson = personService.insertNewPerson(person);
         publisher.publishEvent(new ResourceEvent(this, response, newPerson.getId()));
-
         return ResponseEntity.status(HttpStatus.CREATED).body(newPerson);
     }
 
@@ -58,6 +57,19 @@ public class PersonController {
         personModel.setStatus(person.getStatus());
 
         return ResponseEntity.status(HttpStatus.OK).body(personService.insertNewPerson(personModel));
+    }
+
+    @PutMapping("/{id}/active")
+    public ResponseEntity<Person> updateActiveProperties(@PathVariable Long id, @RequestBody Boolean status) {
+        Optional<Person> personOptional = personService.updateActiveProperties(id);
+        if (!personOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        var personModel = personOptional.get();
+        personModel.setStatus(status);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(personService.insertNewPerson(personModel));
     }
 
     @DeleteMapping(value = "/{id}")
