@@ -1,29 +1,30 @@
 package com.sena.leonardo.algamoneyapi.api.controllers;
 
-import com.sena.leonardo.algamoneyapi.api.event.ResourceEvent;
 import com.sena.leonardo.algamoneyapi.domain.models.Register;
+import com.sena.leonardo.algamoneyapi.domain.repositories.RegisterRepository;
+import com.sena.leonardo.algamoneyapi.domain.repositories.filter.RegisterFilter;
 import com.sena.leonardo.algamoneyapi.domain.services.RegisterService;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/registers")
 public class RegisterController {
 
     private RegisterService registerService;
-    private ApplicationEventPublisher publisher;
+    private RegisterRepository registerRepository;
 
-    public RegisterController(RegisterService registerService, ApplicationEventPublisher publisher) {
+    public RegisterController(RegisterService registerService, RegisterRepository registerRepository) {
         this.registerService = registerService;
-        this.publisher = publisher;
+        this.registerRepository = registerRepository;
     }
+
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<Register> findRegisterById(@PathVariable Long id) {
@@ -33,9 +34,9 @@ public class RegisterController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Register>> findAllRegisters() {
-        List<Register> registers = registerService.findAllRegisters();
-        return ResponseEntity.ok().body(registers);
+    public Page<Register> search(RegisterFilter registerFilter, Pageable pageable) {
+       return registerRepository.filter(registerFilter, pageable);
+
     }
 
     @PostMapping
@@ -43,5 +44,11 @@ public class RegisterController {
         return registerService.insertNewRegister(register)
                 .map(r -> ResponseEntity.ok(r))
                 .orElse(ResponseEntity.badRequest().build());
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> deleteRegister(@PathVariable Long id) {
+        registerService.deleteRegisterById(id);
+        return ResponseEntity.noContent().build();
     }
 }

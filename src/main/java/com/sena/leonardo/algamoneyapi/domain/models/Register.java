@@ -20,10 +20,8 @@ public class Register {
 
     @NotNull
     @Column(name = "due_date")
-    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dueDate;
 
-    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate payday;
 
     @NotNull
