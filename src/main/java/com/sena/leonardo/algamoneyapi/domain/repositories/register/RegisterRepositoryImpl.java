@@ -1,8 +1,11 @@
 package com.sena.leonardo.algamoneyapi.domain.repositories.register;
 
+import com.sena.leonardo.algamoneyapi.domain.models.Category_;
+import com.sena.leonardo.algamoneyapi.domain.models.Person_;
 import com.sena.leonardo.algamoneyapi.domain.models.Register;
 import com.sena.leonardo.algamoneyapi.domain.models.Register_;
 import com.sena.leonardo.algamoneyapi.domain.repositories.filter.RegisterFilter;
+import com.sena.leonardo.algamoneyapi.domain.repositories.projection.RegisterSummary;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -38,6 +41,28 @@ public class RegisterRepositoryImpl implements RegisterRepositoryQuery {
         return new PageImpl<>(query.getResultList(), pageable, getTotal(registerFilter));
     }
 
+    @Override
+    public Page<RegisterSummary> registerSummary(RegisterFilter registerFilter, Pageable pageable) {
+        CriteriaBuilder builder = manager.getCriteriaBuilder();
+        CriteriaQuery<RegisterSummary> criteria = builder.createQuery(RegisterSummary.class);
+        Root<Register> root = criteria.from(Register.class);
+
+        criteria.select(builder.construct(RegisterSummary.class
+                , root.get(Register_.id), root.get(Register_.description)
+                , root.get(Register_.dueDate), root.get(Register_.payday)
+                , root.get(Register_.amount), root.get(Register_.type)
+                , root.get(Register_.category).get(Category_.name)
+                , root.get(Register_.person).get(Person_.name)));
+
+        Predicate[] predicates = getLimits(registerFilter, builder, root);
+        criteria.where(predicates);
+
+        TypedQuery<RegisterSummary> query = manager.createQuery(criteria);
+        getAddLimitsPageable(pageable, query);
+
+        return new PageImpl<>(query.getResultList(), pageable, getTotal(registerFilter));
+    }
+
     private Predicate[] getLimits(RegisterFilter registerFilter, CriteriaBuilder builder, Root<Register> root) {
         List<Predicate> predicates = new ArrayList<>();
 
@@ -62,7 +87,7 @@ public class RegisterRepositoryImpl implements RegisterRepositoryQuery {
         return predicates.toArray(new Predicate[predicates.size()]);
     }
 
-    private void getAddLimitsPageable(Pageable pageable, TypedQuery<Register> query) {
+    private void getAddLimitsPageable(Pageable pageable, TypedQuery<?> query) {
         int actualPage = pageable.getPageNumber();
         int totalRegisterPerPage = pageable.getPageSize();
         int firstPageRegister = actualPage * totalRegisterPerPage;

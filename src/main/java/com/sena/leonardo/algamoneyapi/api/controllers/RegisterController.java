@@ -3,6 +3,7 @@ package com.sena.leonardo.algamoneyapi.api.controllers;
 import com.sena.leonardo.algamoneyapi.domain.models.Register;
 import com.sena.leonardo.algamoneyapi.domain.repositories.RegisterRepository;
 import com.sena.leonardo.algamoneyapi.domain.repositories.filter.RegisterFilter;
+import com.sena.leonardo.algamoneyapi.domain.repositories.projection.RegisterSummary;
 import com.sena.leonardo.algamoneyapi.domain.services.RegisterService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -39,7 +40,12 @@ public class RegisterController {
     @PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and hasAuthority('SCOPE_read')")
     public Page<Register> search(RegisterFilter registerFilter, Pageable pageable) {
        return registerRepository.filter(registerFilter, pageable);
+    }
 
+    @GetMapping(params = "summary")
+    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and hasAuthority('SCOPE_read')")
+    public Page<RegisterSummary> registerSummary(RegisterFilter registerFilter, Pageable pageable) {
+       return registerRepository.registerSummary(registerFilter, pageable);
     }
 
     @PostMapping
