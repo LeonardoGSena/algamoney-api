@@ -7,6 +7,7 @@ import com.sena.leonardo.algamoneyapi.domain.services.RegisterService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -27,6 +28,7 @@ public class RegisterController {
 
 
     @GetMapping(value = "/{id}")
+    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and hasAuthority('SCOPE_read')")
     public ResponseEntity<Register> findRegisterById(@PathVariable Long id) {
         return registerService.findRegisterById(id)
                 .map(register -> ResponseEntity.ok(register))
@@ -34,12 +36,14 @@ public class RegisterController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and hasAuthority('SCOPE_read')")
     public Page<Register> search(RegisterFilter registerFilter, Pageable pageable) {
        return registerRepository.filter(registerFilter, pageable);
 
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO') and hasAuthority('SCOPE_write')")
     public ResponseEntity<Register> insertRegister(@Valid @RequestBody Register register, HttpServletResponse response) {
         return registerService.insertNewRegister(register)
                 .map(r -> ResponseEntity.ok(r))
@@ -47,6 +51,7 @@ public class RegisterController {
     }
 
     @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasAuthority('ROLE_REMOVER_LANCAMENTO') and hasAuthority('SCOPE_write')")
     public ResponseEntity<Void> deleteRegister(@PathVariable Long id) {
         registerService.deleteRegisterById(id);
         return ResponseEntity.noContent().build();

@@ -6,6 +6,7 @@ import com.sena.leonardo.algamoneyapi.domain.services.PersonService;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -25,6 +26,7 @@ public class PersonController {
     }
 
     @GetMapping(value = "/{id}")
+    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA') and hasAuthority('SCOPE_read')")
     public ResponseEntity<Person> findPersonById(@PathVariable Long id) {
         return personService.findPersonById(id)
                 .map(person -> ResponseEntity.ok(person))
@@ -32,12 +34,14 @@ public class PersonController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA') and hasAuthority('SCOPE_read')")
     public ResponseEntity<List<Person>> findAllPeople() {
         List<Person> allPeople = personService.findAllPeople();
         return ResponseEntity.ok().body(allPeople);
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA') and hasAuthority('SCOPE_write')")
     public ResponseEntity<Person> insertPerson(@Valid @RequestBody Person person, HttpServletResponse response) {
         Person newPerson = personService.insertNewPerson(person);
         publisher.publishEvent(new ResourceEvent(this, response, newPerson.getId()));
@@ -45,6 +49,7 @@ public class PersonController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA') and hasAuthority('SCOPE_write')")
     public ResponseEntity<Person> updatePerson(@PathVariable Long id, @Valid @RequestBody Person person) {
         Optional<Person> personOptional = personService.updatePerson(id);
         if (!personOptional.isPresent()) {
@@ -60,6 +65,7 @@ public class PersonController {
     }
 
     @PutMapping("/{id}/active")
+    @PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA') and hasAuthority('SCOPE_write')")
     public ResponseEntity<Person> updateActiveProperties(@PathVariable Long id, @RequestBody Boolean status) {
         Optional<Person> personOptional = personService.updateActiveProperties(id);
         if (!personOptional.isPresent()) {
@@ -73,6 +79,7 @@ public class PersonController {
     }
 
     @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasAuthority('ROLE_REMOVER_PESSOA') and hasAuthority('SCOPE_write')")
     public ResponseEntity<Void> deletePerson(@PathVariable Long id) {
         personService.deletePerson(id);
         return ResponseEntity.noContent().build();

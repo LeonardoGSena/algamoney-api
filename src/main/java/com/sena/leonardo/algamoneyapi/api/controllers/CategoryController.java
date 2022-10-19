@@ -6,6 +6,7 @@ import com.sena.leonardo.algamoneyapi.domain.services.CategoryService;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -25,18 +26,21 @@ public class CategoryController {
     }
 
     @GetMapping(value = "/{id}")
+    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and hasAuthority('SCOPE_read')")
     public ResponseEntity<Category> findCategoryById(@PathVariable Long id) {
         return categoryService.findCategoryById(id)
                 .map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and hasAuthority('SCOPE_read')")
     public ResponseEntity<List<Category>> findAllCategories() {
         List<Category> categories = categoryService.findAllCategories();
         return ResponseEntity.ok().body(categories);
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ROLE_CADASTRAR_CATEGORIA') and hasAuthority('SCOPE_write')")
     public ResponseEntity<Category> insertCategory(@Valid @RequestBody Category category, HttpServletResponse response) {
         Category newCategory = categoryService.insertNewCategory(category);
         publisher.publishEvent(new ResourceEvent(this, response, newCategory.getId()));
