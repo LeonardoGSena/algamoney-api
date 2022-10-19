@@ -1,5 +1,7 @@
 package com.sena.leonardo.algamoneyapi.cors;
 
+import com.sena.leonardo.algamoneyapi.config.property.AlgamoneyApiProperty;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -13,16 +15,18 @@ import java.io.IOException;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class CorsFilter implements Filter {
 
-    private String originPermitted = "http://localhost:8000"; //TODO: Configure to different environments.
+    @Autowired
+    private AlgamoneyApiProperty algamoneyApiProperty;
+
     @Override
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) resp;
 
-        response.setHeader("Access-Control-Allow-Origin", originPermitted);
+        response.setHeader("Access-Control-Allow-Origin", algamoneyApiProperty.getOriginPermitted());
         response.setHeader("Access-Control-Allow-Credentials", "true");
 
-        if ("OPTIONS".equals(request.getMethod()) && originPermitted.equals(request.getHeader("Origin"))) {
+        if ("OPTIONS".equals(request.getMethod()) && algamoneyApiProperty.getOriginPermitted().equals(request.getHeader("Origin"))) {
             response.setHeader("Access-Control-Allow-Methods", "POST, GET, DELETE, PUT, OPTIONS");
             response.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type, Accept");
             response.setHeader("Access-Control-Max-Age", "3600");
