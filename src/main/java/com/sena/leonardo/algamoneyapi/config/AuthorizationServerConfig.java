@@ -42,6 +42,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .authorizedGrantTypes("password", "refresh_token")
                 .accessTokenValiditySeconds(1800)
                 .refreshTokenValiditySeconds(3600 * 24);
+
     }
 
     @Override
@@ -51,10 +52,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
         endpoints
                 .authenticationManager(authenticationManager)
-                .tokenEnhancer(tokenEnhancerChain)
-                .accessTokenConverter(accessTokenConverter())
-                .tokenStore(tokenStore())
                 .userDetailsService(userDetailsService)
+                .tokenEnhancer(tokenEnhancerChain)
+                .tokenStore(tokenStore())
                 .reuseRefreshTokens(false);
     }
 
