@@ -9,8 +9,7 @@ import java.util.Collection;
 public class UserApp extends User {
     private UserSystem userSystem;
 
-
-    public UserApp(UserSystem userSystem, String password, Collection<? extends GrantedAuthority> authorities) {
+    public UserApp(UserSystem userSystem, Collection<? extends GrantedAuthority> authorities) {
         super(userSystem.getEmail(), userSystem.getPassword(), authorities);
         this.userSystem = userSystem;
     }

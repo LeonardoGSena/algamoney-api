@@ -27,7 +27,7 @@ public class AppUserDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<UserSystem> optionalUser = userSystemRepository.findByEmail(email);
         UserSystem userSystem = optionalUser.orElseThrow(() -> new UsernameNotFoundException("Invalid user or password."));
-        return new User(email, userSystem.getPassword(), getPermissions(userSystem));
+        return new UserApp(userSystem, getPermissions(userSystem));
     }
 
     private Collection<? extends GrantedAuthority> getPermissions(UserSystem userSystem) {
