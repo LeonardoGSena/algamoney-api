@@ -35,14 +35,6 @@ import java.util.stream.Collectors;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ResourceServerConfig extends WebSecurityConfigurerAdapter {
 
-//    @Autowired
-//    private UserDetailsService userDetailsService;
-//
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-//    }
-
     @Override
     public void configure(HttpSecurity http) throws Exception {
 
@@ -88,8 +80,8 @@ public class ResourceServerConfig extends WebSecurityConfigurerAdapter {
                 authorities = Collections.emptyList();
             }
 
-            JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-            Collection<GrantedAuthority> grantedAuthorities = jwtGrantedAuthoritiesConverter.convert(jwt);
+            JwtGrantedAuthoritiesConverter scopesAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
+            Collection<GrantedAuthority> grantedAuthorities = scopesAuthoritiesConverter.convert(jwt);
             grantedAuthorities.addAll(authorities.stream()
                     .map(SimpleGrantedAuthority::new)
                     .collect(Collectors.toList()));

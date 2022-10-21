@@ -3,8 +3,8 @@ package com.sena.leonardo.algamoneyapi.config.property;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-@Component
 @ConfigurationProperties("algamoney")
+@Component
 public class AlgamoneyApiProperty {
 
     private String originPermitted = "http://localhost:8000";
