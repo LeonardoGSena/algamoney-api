@@ -41,7 +41,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory()
                 .withClient("angular")
-                .secret("$2a$10$u0n5yNoCMCDQ2LVDk78EiuiXpbooU0H1r9q4hSnOC6jKaSJel00o")
+                .secret("$2a$10$KDKW/Yrl4QhcfmnV3j90V.nCKOB3Uksd7ogksy248Agqkt2DxRsee")
                 .scopes("read", "write")
                 .authorizedGrantTypes("password", "refresh_token")
                 .accessTokenValiditySeconds(1800)
@@ -64,8 +64,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 
         endpoints
                 .authenticationManager(authenticationManager)
-                .tokenEnhancer(tokenEnhancer())
                 .userDetailsService(userDetailsService)
+                .tokenEnhancer(tokenEnhancerChain)
                 .tokenStore(tokenStore())
                 .reuseRefreshTokens(false);
     }

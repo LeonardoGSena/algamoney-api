@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,7 +26,7 @@ public class AppUserDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<UserSystem> optionalUser = userSystemRepository.findByEmail(email);
         UserSystem userSystem = optionalUser.orElseThrow(() -> new UsernameNotFoundException("Invalid user or password."));
-        return new User(email, userSystem.getPassword(), getPermissions(userSystem));
+        return new UserApp(userSystem, getPermissions(userSystem));
     }
 
     private Collection<? extends GrantedAuthority> getPermissions(UserSystem userSystem) {
